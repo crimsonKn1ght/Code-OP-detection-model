@@ -2,7 +2,6 @@ IMAGE_FOLDER = "<Enter Path>"
 BEST_MODEL_PATH = "best_model.pth"
 
 IMAGE_SIZE = (128, 128)
-NUM_CHANNELS = 1
 
 N_PCA_COMPONENTS = 75   # 75 for 2 classes, 90 for 3 classes as per the original code
 

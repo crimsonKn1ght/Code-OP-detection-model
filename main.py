@@ -3,13 +3,21 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-from tools.train import train, test_model
+from utils.train import train_model
+from utils.evaluate import test_model
+
 from models.model import FeatureFusionDUNetCBAM
-from utils import set_seed, get_image_dataset, prepare_features, split_data, FeatureDataset
+
+from utils.set_seed import set_seed
+from utils.split_data import split_data
+from utils.feature_ds import FeatureDataset
+from utils.gt_img_ds import get_image_dataset
+from utils.prepare_fe import prepare_features
+
 
 from config import (
     IMAGE_FOLDER, BEST_MODEL_PATH,
-    IMAGE_SIZE, NUM_CHANNELS,
+    IMAGE_SIZE,
     N_PCA_COMPONENTS, BATCH_SIZE, NUM_EPOCHS,
     LEARNING_RATE, WEIGHT_DECAY, PATIENCE, MIN_LR, SEED
 )
@@ -18,7 +26,6 @@ from config import (
 if __name__ == '__main__':
     set_seed(SEED)
 
-    image_folder = "/kaggle/input/knee-op-altered-ds/Osteoporosis 2 class data"
     images, labels = get_image_dataset(IMAGE_FOLDER, image_size=IMAGE_SIZE)
 
     features, labels = prepare_features(images, labels, n_components=N_PCA_COMPONENTS)
@@ -42,10 +49,10 @@ if __name__ == '__main__':
     )
 
 
-    train(
+    train_model(
         model, train_loader, val_loader,
         criterion, optimizer, scheduler,
-        NUM_EPOCHS=50, device=device
+        NUM_EPOCHS, device=device,
     )
 
     model.load_state_dict(torch.load(BEST_MODEL_PATH))
